@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import pet, { ANIMALS } from "@frontendmasters/pet";
-import Results from "./Results";
 import useDropdown from "./useDropDown";
+import Results from "./Results";
 
 const SearchParams = () => {
   const [location, updateLocation] = useState("Seattle, WA");
   const [breeds, updateBreeds] = useState([]);
+  const [pets, setPets] = useState([]);
   const [animal, AnimalDropdown] = useDropdown("Animal", "dog", ANIMALS);
   const [breed, BreedDropdown, updateBreed] = useDropdown("Breed", "", breeds);
-  const [pets, setPets] = useState([]);
 
   async function requestPets() {
     const { animals } = await pet.animals({
@@ -16,6 +16,8 @@ const SearchParams = () => {
       breed,
       type: animal
     });
+
+    console.log("animals", animals);
 
     setPets(animals || []);
   }
@@ -28,7 +30,7 @@ const SearchParams = () => {
       const breedStrings = breeds.map(({ name }) => name);
       updateBreeds(breedStrings);
     }, console.error);
-  }, [animal, updateBreed, updateBreeds]);
+  }, [animal]);
 
   return (
     <div className="search-params">
@@ -41,9 +43,9 @@ const SearchParams = () => {
         <label htmlFor="location">
           Location
           <input
-            value={location}
             id="location"
-            placeholder="location"
+            value={location}
+            placeholder="Location"
             onChange={e => updateLocation(e.target.value)}
           />
         </label>
